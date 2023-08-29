@@ -1,7 +1,7 @@
-import { Import } from '../auto-complete/import-db'
+import type { Import } from '../auto-complete/import-db'
 import { getMatches } from './util'
 
-const findConstants = /export[ \t\n]+(?:declare[ \t\n]+)?(const +enum|default|class|interface|let|var|const|enum|type|function)[ \t\n]+([^=\n\t (:;<]+)/g
+const findConstants = /export[ \t\n]+(?:declare[ \t\n]+)?(const +enum|default|class|interface|let|var|const|enum|type|module|function)[ \t\n]+([^=(:;<]+)/g
 const findDynamics = /export +{([^}]+)}/g
 
 const regexTokeniser = (file: string) => {
@@ -10,16 +10,15 @@ const regexTokeniser = (file: string) => {
   // Extract constants
   {
     const matches = getMatches(file, findConstants)
-    const imps = matches.map(([_, type, name]) => ({ type, name }))
+    const imps = matches.map(([_, type, name]) => ({ type: type, name: name.trim() } as Import))
     imports.push(...imps)
   }
 
   // Extract dynamic imports
   {
     const matches = getMatches(file, findDynamics)
-    const flattened: string[] = [].concat(
-      ...matches.map(([_, imps]) => imps.split(','))
-    )
+    const initial: string[] = []
+    const flattened: string[] = initial.concat(...matches.map(([_, imps]) => imps.split(',')))
 
     // Resolve 'import as export'
     const resolvedAliases = flattened.map(raw => {

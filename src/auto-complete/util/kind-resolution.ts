@@ -1,11 +1,11 @@
 import { monaco } from '..'
-import { ImportObject } from '../import-db'
+import type { ImportObject } from '../import-db'
 
 const kindResolver = (imp: ImportObject) => {
   switch (imp.type) {
     case 'function':
       return monaco.languages.CompletionItemKind.Function
-
+      
     case 'interface':
       return monaco.languages.CompletionItemKind.Interface
 
@@ -24,6 +24,9 @@ const kindResolver = (imp: ImportObject) => {
 
     case 'type':
       return monaco.languages.CompletionItemKind.Method
+
+    case 'module':
+      return monaco.languages.CompletionItemKind.Module
 
     default:
       return monaco.languages.CompletionItemKind.Reference
