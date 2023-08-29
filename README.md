@@ -51,7 +51,7 @@ yarn add @kareemkermad/monaco-auto-import
 npm i @kareemkermad/monaco-auto-import --save
 ```
 
-### Using
+### How to Use
 
 #### Initializing a new instance
 
@@ -66,6 +66,18 @@ const editor = monaco.editor.create(document.getElementById('demo'), {
 
 const completor = new AutoImport({ monaco: monaco, editor: editor, spacesBetweenBraces: true, doubleQuotes: true, semiColon: true, alwaysApply: false });
 ```
+
+#### Options
+
+* `monaco` - Monaco instance.
+* `editor` - Monaco editor instance.
+* `spacesBetweenBraces` - True uses a space between the curly braces, false otherwise. <br> e.g. `import { Test } from "testing"` or `import {Test} from "testing"`
+* `doubleQuotes` - True uses double quotes in the import path, false uses single quotes. <br> e.g. `import { Test } from "testing"` or `import {Test} from 'testing'`
+* `semiColon` - True uses a semi colon after the import path, false otherwise. <br> e.g. `import { Test } from "testing";` or `import {Test} from 'testing'`
+* `alwaysApply` - True will always use the spacesBetweenBraces, doubleQuotes and semiColon options. False will only use them the first time you auto import and then automatically preserve any changes you make.
+
+  
+e.g. If `alwaysApply = true` and `doubleQuotes = true` then it will always use double quotes whenever you auto import. If `alwaysApply = false` and `doubleQuotes = true` then it will use double quotes the first time you auto import. But if you decide to modify the string to use single quotes then it will preserve the single quotes every other time you try to auto import.
 
 #### Providing completion items
 
@@ -99,13 +111,23 @@ const imports = regexTokeniser(`
   export class Test {}
   export interface type Shape
 `)
-// [{ type: 'const', name: 'a'}, { type: 'class', name: 'Test' }, { type: 'interface', name: 'Shape' }]
+// [{ type: 'const', name: 'a'}, { type: 'class', name: 'Test' }, { type: 'interface', name: 'type Shape' }]
 
 completor.imports.saveFile({
   path: './src/my-app.js',
   imports: imports
 })
 ```
+
+## New Features and Bug Fixes (https://github.com/stackblitz/monaco-auto-import)
+* Added `monaco`, `editor`, `spacesBetweenBraces`, `doubleQuotes`, `semiColon`, `alwaysApply` options.
+* Added support for import type - e.g. `import {type Test} from "testing";`
+* Added support for module.
+* Updated auto import suggestion to not show up a second time if it has already been imported.
+* Updated auto import suggestion description for import type.
+* Fixed import merging not working when swapping from single quotes to double quotes.
+* Fixed a bug that caused the name to autocomplete twice.
+* Fixed a bug that caused the mouse cursor position to move to a previous line.
 
 ## API
 
