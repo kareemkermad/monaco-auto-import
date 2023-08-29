@@ -1,9 +1,11 @@
 # monaco-auto-import
 
 
-[![npm version](https://img.shields.io/npm/v/@blitz/monaco-auto-import.svg?style=flat-square)](https://www.npmjs.com/package/@blitz/monaco-auto-import)
-[![npm downloads](https://img.shields.io/npm/dm/@blitz/monaco-auto-import.svg?style=flat-square)](https://www.npmjs.com/package/@blitz/monaco-auto-import)
-[![Demo](https://img.shields.io/badge/Online-Demo-yellow.svg?style=flat-square)](https://unpkg.com/@blitz/monaco-auto-import/dist/index.html)
+[![npm version](https://img.shields.io/npm/v/@kareemkermad/monaco-auto-import.svg?style=flat-square)](https://www.npmjs.com/package/@kareemkermad/monaco-auto-import)
+[![npm downloads](https://img.shields.io/npm/dm/@kareemkermad/monaco-auto-import.svg?style=flat-square)](https://www.npmjs.com/package/@kareemkermad/monaco-auto-import)
+[![Demo](https://img.shields.io/badge/Online-Demo-yellow.svg?style=flat-square)](https://unpkg.com/@kareemkermad/monaco-auto-import/dist/index.html)
+
+Forked from https://github.com/stackblitz/monaco-auto-import
 
 
 Easily add auto-import to the Monaco editor, with Javascript & Typescript support.
@@ -15,7 +17,7 @@ Easily add auto-import to the Monaco editor, with Javascript & Typescript suppor
 ### Example code
 
 ```ts
-import AutoImport, { regexTokeniser } from '@blitz/monaco-auto-import'
+import AutoImport, { regexTokeniser } from '@kareemkermad/monaco-auto-import'
 
 const editor = monaco.editor.create(document.getElementById('demo'), {
   value: `
@@ -26,19 +28,17 @@ const editor = monaco.editor.create(document.getElementById('demo'), {
   language: 'typescript'
 })
 
-const completor = new AutoImport({ monaco, editor })
+const completor = new AutoImport({ monaco: monaco, editor: editor, spacesBetweenBraces: true, doubleQuotes: true, semiColon: true, alwaysApply: false });
 
-completor.imports.saveFiles([
-  {
-    path: './node_modules/left-pad/index.js',
-    aliases: ['left-pad'],
-    imports: regexTokeniser(`
-      export const PAD = ''
-      export function leftPad() {}
-      export function rightPad() {}
-    `)
-  }
-])
+completor.imports.saveFile({
+  path: './node_modules/left-pad/index.js',
+  aliases: ['left-pad'],
+  imports: regexTokeniser(`
+    export const PAD = ''
+    export function leftPad() {}
+    export function rightPad() {}
+  `)
+})
 ```
 
 ## Getting started
@@ -46,9 +46,9 @@ completor.imports.saveFiles([
 ### Installing
 
 ```bash
-yarn add @blitz/monaco-auto-import
+yarn add @kareemkermad/monaco-auto-import
 # or
-npm i @blitz/monaco-auto-import --save
+npm i @kareemkermad/monaco-auto-import --save
 ```
 
 ### Using
@@ -58,13 +58,13 @@ npm i @blitz/monaco-auto-import --save
 Simply create a new Monaco editor instance and pass it to `AutoImport`. This will register custom completion providers for Monaco's `javascript` and `typescript` language services.
 
 ```ts
-import AutoImport from '@blitz/monaco-auto-import'
+import AutoImport from '@kareemkermad/monaco-auto-import'
 
 const editor = monaco.editor.create(document.getElementById('demo'), {
   language: 'typescript'
 })
 
-const completor = new AutoImport({ monaco, editor })
+const completor = new AutoImport({ monaco: monaco, editor: editor, spacesBetweenBraces: true, doubleQuotes: true, semiColon: true, alwaysApply: false });
 ```
 
 #### Providing completion items
@@ -75,10 +75,12 @@ To make the auto-importer aware of a file with exports, simply call `completor.i
 completor.imports.saveFile({
   path: './src/my-app.js',
   imports: [
-    {
-      type: 'const',
-      name: 'Testing'
-    }
+    { type: 'const', name: 'Testing' },
+    { type: 'class', name: 'World' },
+    { type: 'class', name: 'type Universe' },
+    { type: 'interface', name: 'Shape' },
+    { type: 'function', name: 'drawShape' },
+    { type: 'enum', name: 'Primitive' },
   ]
 })
 ```
@@ -90,13 +92,14 @@ completor.imports.saveFile({
 This package includes a built-in `regexTokeniser`, which uses a simple Regex to extracts exports from Javascript / Typescript code
 
 ```ts
-import { regexTokeniser } from '@blitz/monaco-auto-import'
+import { regexTokeniser } from '@kareemkermad/monaco-auto-import'
 
 const imports = regexTokeniser(`
   export const a = 1
   export class Test {}
+  export interface type Shape
 `)
-// [{ type: 'const', name: 'a'}, { type: 'class', name: 'Test' }]
+// [{ type: 'const', name: 'a'}, { type: 'class', name: 'Test' }, { type: 'interface', name: 'Shape' }]
 
 completor.imports.saveFile({
   path: './src/my-app.js',

@@ -1,6 +1,6 @@
 {
-  "name": "@blitz/monaco-auto-import",
-  "version": "1.0.7",
+  "name": "@kareemkermad/monaco-auto-import",
+  "version": "1.0.8",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "description": "Easily add auto-import to the Monaco editor, with Javascript & Typescript support.",
@@ -8,7 +8,7 @@
     "build": "rm -rf lib; tsc",
     "start": "parcel serve ./demo/index.html --open",
     "build:demo": "rm -rf dist; parcel build ./demo/index.html",
-    "release": "yarn test && yarn clean && yarn build && yarn publish && yarn clean",
+    "release": "npm run test && npm run clean && npm run build && npm run publish && npm run clean",
     "test": "jest --verbose",
     "test:coverage": "jest --coverage",
     "test:watch": "jest --watch"
@@ -42,14 +42,14 @@
     "lib"
   ],
   "keywords": [],
-  "homepage": "https://github.com/stackblitz/monaco-auto-import",
+  "homepage": "https://github.com/kareemkermad/monaco-auto-import",
   "repository": {
     "type": "git",
-    "url": "https://github.com/stackblitz/monaco-auto-import.git"
+    "url": "https://github.com/kareemkermad/monaco-auto-import.git"
   },
   "bugs": {
-    "url": "https://github.com/stackblitz/monaco-auto-import/issues"
+    "url": "https://github.com/kareemkermad/monaco-auto-import/issues"
   },
-  "author": "Sam Denty <samddenty@gmail.com> (http://github.com/samdenty99)",
+  "author": "Kareem Kermad (http://github.com/kareemkermad)",
   "license": "MIT"
 }
