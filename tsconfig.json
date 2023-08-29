@@ -9,7 +9,8 @@
     "declaration": true,
     "moduleResolution": "node",
     "rootDir": "src",
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+    "types": ["jest"]
   },
   "include": ["./src/**/*"]
 }
