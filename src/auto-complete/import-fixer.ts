@@ -21,24 +21,25 @@ export class ImportFixer {
   }
 
   public fix(document: Monaco.editor.ITextModel, imp: ImportObject): void {
-    let position = this.editor.getPosition()!
+    const position = this.editor.getPosition()!
     const edits = this.getTextEdits(document, imp)
     if (position.lineNumber <= 1) {
       const text = edits[0].text ?? ""
+      const offset = edits[0].range.endLineNumber > 0 ? 0 : 1
       this.editor.executeEdits('', edits)
-      this.editor.setPosition(new Monaco.Position(position.lineNumber, text.length + position.column))
+      this.editor.setPosition(new Monaco.Position(position.lineNumber + offset, text.length + position.column))
     }
     else {
+      const offset = edits[0].range.endLineNumber > 0 ? 0 : 1
       this.editor.executeEdits('', edits)
-      this.editor.setPosition(position)
+      this.editor.setPosition(new Monaco.Position(position.lineNumber + offset, position.column))
     }
   }
 
-  public getTextEdits(document: Monaco.editor.ITextModel, imp: ImportObject) {
+  public getTextEdits(document: Monaco.editor.ITextModel, imp: ImportObject): Monaco.editor.IIdentifiedSingleEditOperation[] {
     const edits = new Array<Monaco.editor.IIdentifiedSingleEditOperation>()
-
     const { importResolved, fileResolved, imports } = this.parseResolved(document, imp)
-    
+
     if (importResolved) {
       return edits
     }
@@ -46,13 +47,13 @@ export class ImportFixer {
     if (fileResolved) {
       edits.push({
         range: new this.monaco.Range(0, 0, document.getLineCount() + 1, 0),
-        text: this.mergeImports(document, imp, imports[0].path)
+        text: this.mergeImports(document, imp, imports.filter(({ path }) => path === imp.file.path || imp.file.aliases!.indexOf(path) > -1)[0].path)
       })
     } 
     else {
       edits.push({
         range: new this.monaco.Range(0, 0, 0, 0),
-        text: this.createImportStatement(document, imp)
+        text: this.createImportStatement(document, imp) + '\n'
       })
     }
 
@@ -63,26 +64,20 @@ export class ImportFixer {
    * Returns whether a given import has already been
    * resolved by the user
    */
-  private parseResolved(document: Monaco.editor.ITextModel, imp: ImportObject) {
-    const exp = /(?:import[ \t]+{)(.*)}[ \t]+from[ \t]+['"](.*)['"](;?)/g
-    const currentDoc = document.getValue()
-
-    const matches = getMatches(currentDoc, exp)
-    const parsed = matches.map(([_, names, path]) => ({
-      names: names.split(',').map(imp => imp.trim().replace(/\n/g, '')),
-      path
-    }))
-    
+  private parseResolved(document: Monaco.editor.ITextModel, imp: ImportObject): { imports: { names: string[]; path: string; }[], importResolved: boolean, fileResolved: boolean } {
+    const exp = /(?:[ \t]*import[ \t]+{)(.*)}[ \t]+from[ \t]+['"](.*)['"](;?)/g
+    const value = document.getValue()
+    const matches = getMatches(value, exp)
+    const parsed = matches.map(([_, names, path]) => ({ names: names.split(',').map(imp => imp.trim().replace(/\n/g, '')), path }))
     const imports = parsed.filter(({ path }) => path === imp.file.path || imp.file.aliases!.indexOf(path) > -1)
     const importResolved = imports.findIndex(i => i.names.indexOf(imp.name) > -1) > -1
-
     return { imports, importResolved, fileResolved: !!imports.length }
   }
 
   /**
    * Merges an import statement into the document
    */
-  private mergeImports(document: Monaco.editor.ITextModel, imp: ImportObject, path: string) {
+  private mergeImports(document: Monaco.editor.ITextModel, imp: ImportObject, path: string): string {
     let currentDoc = document.getValue()
     const exp = new RegExp(`(?:[ \t]*import[ \t]+{)(.*)}[ \t]+from[ \t]+['"](${path})['"](;?)`)
     const match = exp.exec(currentDoc)
