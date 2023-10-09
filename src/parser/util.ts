@@ -1,6 +1,6 @@
 export const getMatches = (string: string, regex: RegExp) => {
   const matches = []
-  let match
+  let match: RegExpExecArray
   while ((match = regex.exec(string))) {
     matches.push(match)
   }

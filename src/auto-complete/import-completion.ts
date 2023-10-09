@@ -7,7 +7,6 @@ import kindResolver from './util/kind-resolution'
 export const IMPORT_COMMAND = 'resolveImport'
 
 class ImportCompletion implements Monaco.languages.CompletionItemProvider {
-  private monaco: typeof Monaco
   private editor: Monaco.editor.IStandaloneCodeEditor
   private importDb: ImportDb
   private spacesBetweenBraces: boolean
@@ -15,8 +14,7 @@ class ImportCompletion implements Monaco.languages.CompletionItemProvider {
   private semiColon: boolean
   private alwaysApply: boolean
 
-  constructor(monaco: typeof Monaco, editor: Monaco.editor.IStandaloneCodeEditor, importDb: ImportDb, spacesBetweenBraces: boolean, doubleQuotes: boolean, semiColon: boolean, alwaysApply: boolean) {
-    this.monaco = monaco
+  constructor(editor: Monaco.editor.IStandaloneCodeEditor, importDb: ImportDb, spacesBetweenBraces: boolean, doubleQuotes: boolean, semiColon: boolean, alwaysApply: boolean) {
     this.editor = editor
     this.importDb = importDb
     this.spacesBetweenBraces = spacesBetweenBraces
@@ -40,7 +38,7 @@ class ImportCompletion implements Monaco.languages.CompletionItemProvider {
    * suggestion has been selected
    */
   public handleCommand(imp: ImportObject, document: Monaco.editor.ITextModel) {
-    new ImportFixer(this.monaco, this.editor, this.spacesBetweenBraces, this.doubleQuotes, this.semiColon, this.alwaysApply).fix(document, imp)
+    new ImportFixer(this.editor, this.spacesBetweenBraces, this.doubleQuotes, this.semiColon, this.alwaysApply).fix(document, imp)
   }
 
   public provideCompletionItems(document: Monaco.editor.ITextModel) {

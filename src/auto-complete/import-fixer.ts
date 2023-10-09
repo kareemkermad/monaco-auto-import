@@ -4,15 +4,13 @@ import type { ImportObject } from './import-db'
 import type { Expression } from '../parser'
 
 export class ImportFixer {
-  private monaco: typeof Monaco
   private editor: Monaco.editor.IStandaloneCodeEditor
   private spacesBetweenBraces: boolean
   private doubleQuotes: boolean
   private semiColon: boolean
   private alwaysApply: boolean
 
-  constructor(monaco: typeof Monaco, editor: Monaco.editor.IStandaloneCodeEditor, spacesBetweenBraces: boolean, doubleQuotes: boolean, semiColon: boolean, alwaysApply: boolean) {
-    this.monaco = monaco
+  constructor(editor: Monaco.editor.IStandaloneCodeEditor, spacesBetweenBraces: boolean, doubleQuotes: boolean, semiColon: boolean, alwaysApply: boolean) {
     this.editor = editor
     this.spacesBetweenBraces = spacesBetweenBraces
     this.doubleQuotes = doubleQuotes
@@ -46,13 +44,13 @@ export class ImportFixer {
 
     if (fileResolved) {
       edits.push({
-        range: new this.monaco.Range(0, 0, document.getLineCount() + 1, 0),
+        range: new Monaco.Range(0, 0, document.getLineCount() + 1, 0),
         text: this.mergeImports(document, imp, imports.filter(({ path }) => path === imp.file.path || imp.file.aliases!.indexOf(path) > -1)[0].path)
       })
     } 
     else {
       edits.push({
-        range: new this.monaco.Range(0, 0, 0, 0),
+        range: new Monaco.Range(0, 0, 0, 0),
         text: this.createImportStatement(document, imp) + '\n'
       })
     }

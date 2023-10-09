@@ -1,35 +1,35 @@
-import { monaco } from '..'
+import { languages } from 'monaco-editor'
 import type { ImportObject } from '../import-db'
 
 const kindResolver = (imp: ImportObject) => {
   switch (imp.type) {
     case 'function':
-      return monaco.languages.CompletionItemKind.Function
+      return languages.CompletionItemKind.Function
       
     case 'interface':
-      return monaco.languages.CompletionItemKind.Interface
+      return languages.CompletionItemKind.Interface
 
     case 'var':
     case 'const':
     case 'let':
     case 'default':
-      return monaco.languages.CompletionItemKind.Variable
+      return languages.CompletionItemKind.Variable
 
     case 'enum':
     case 'const enum':
-      return monaco.languages.CompletionItemKind.Enum
+      return languages.CompletionItemKind.Enum
 
     case 'class':
-      return monaco.languages.CompletionItemKind.Class
+      return languages.CompletionItemKind.Class
 
     case 'type':
-      return monaco.languages.CompletionItemKind.Method
+      return languages.CompletionItemKind.Method
 
     case 'module':
-      return monaco.languages.CompletionItemKind.Module
+      return languages.CompletionItemKind.Module
 
     default:
-      return monaco.languages.CompletionItemKind.Reference
+      return languages.CompletionItemKind.Reference
   }
 }
 
