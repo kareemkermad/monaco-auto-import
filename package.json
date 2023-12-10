@@ -1,13 +1,12 @@
 {
   "name": "@kareemkermad/monaco-auto-import",
-  "version": "1.1.5",
+  "version": "1.1.6",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "description": "Easily add auto-import to the Monaco editor, with Javascript & Typescript support.",
   "scripts": {
     "build": "tsc",
     "start": "parcel serve ./demo/index.html --open",
-    "build:demo": "rm -rf dist; parcel build ./demo/index.html",
     "release": "npm run test && npm run clean && npm run build && npm run publish && npm run clean",
     "test": "jest --verbose",
     "test:coverage": "jest --coverage",
@@ -16,7 +15,7 @@
   "devDependencies": {
     "@types/jest": "^23.1.4",
     "jest": "^23.3.0",
-    "monaco-editor": "^0.13.1",
+    "monaco-editor": "*",
     "ts-jest": "^22.4.2",
     "typescript": "^5.2.2"
   },

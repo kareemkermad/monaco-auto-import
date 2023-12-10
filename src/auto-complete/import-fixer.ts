@@ -1,4 +1,4 @@
-import * as Monaco from 'monaco-editor'
+import type * as Monaco from 'monaco-editor'
 import { getMatches } from './../parser/util'
 import type { ImportObject } from './import-db'
 import type { Expression } from '../parser'
@@ -27,12 +27,12 @@ export class ImportFixer {
       const text = edits[0].text ?? ""
       const offset = edits[0].range.endLineNumber > 0 ? 0 : 1
       this.editor.executeEdits('', edits)
-      this.editor.setPosition(new Monaco.Position(position.lineNumber + offset, text.length + position.column))
+      this.editor.setPosition(new this.monaco.Position(position.lineNumber + offset, text.length + position.column))
     }
     else {
       const offset = edits[0].range.endLineNumber > 0 ? 0 : 1
       this.editor.executeEdits('', edits)
-      this.editor.setPosition(new Monaco.Position(position.lineNumber + offset, position.column))
+      this.editor.setPosition(new this.monaco.Position(position.lineNumber + offset, position.column))
     }
   }
 

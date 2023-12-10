@@ -1,4 +1,4 @@
-import * as Monaco from 'monaco-editor'
+import type * as Monaco from 'monaco-editor'
 
 import type { ImportDb, ImportObject } from './import-db'
 import { ImportFixer } from './import-fixer'
@@ -61,7 +61,7 @@ class ImportCompletion implements Monaco.languages.CompletionItemProvider {
   private buildCompletionItem(imp: ImportObject, document: Monaco.editor.ITextModel, alias: boolean): Monaco.languages.CompletionItem {
     const path = this.createDescription(imp)
     const name = imp.name.startsWith("type ") ? imp.name.slice(5) : imp.name
-    const kind = alias ? Monaco.languages.CompletionItemKind.Property : kindResolver(imp)
+    const kind = alias ? this.monaco.languages.CompletionItemKind.Property : kindResolver(imp)
     const detail = alias ? `(alias) ${imp.type} ${name}` : `import ${imp.name} from "${path}"`
 
     return {
