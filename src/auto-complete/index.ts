@@ -1,4 +1,4 @@
-import type * as Monaco from 'monaco-editor'
+import * as Monaco from 'monaco-editor'
 
 import { ImportAction } from './import-action'
 import ImportCompletion from './import-completion'
@@ -60,7 +60,7 @@ class AutoImport {
     if (document === null) { return; }
 
     const unresolved = new Set<string>();
-    const markers = this.editor.getModelMarkers({ owner: 'typescript', resource: document.uri });
+    const markers = monaco.editor.getModelMarkers({ owner: 'typescript', resource: document.uri });
     for (const marker of markers) {
       if (marker.severity === monaco.MarkerSeverity.Error && marker.message.startsWith('Cannot find name')) {
         const name = this.extractNameFromMarker(marker.message);
