@@ -55,12 +55,10 @@ class AutoImport {
   /**
    * Resolve missing imports from the markers.
    */
-  public resolveMissingImports() {
-    const document = this.editor.getModel();
-    if (document === null) { return; }
-
+  public resolveMissingImports(document: Monaco.editor.ITextModel) {
     const unresolved = new Set<string>();
     const markers = monaco.editor.getModelMarkers({ owner: 'typescript', resource: document.uri });
+    
     for (const marker of markers) {
       if (marker.severity === monaco.MarkerSeverity.Error && marker.message.startsWith('Cannot find name')) {
         const name = this.extractNameFromMarker(marker.message);
